@@ -1,16 +1,20 @@
 package io.security.corespringsecurity.security.configs;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,33 +27,40 @@ import java.security.cert.Extension;
 @Configuration
 @EnableWebSecurity
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig  {
 
 
+//    @Bean
+//    public UserDetailsManager users() {
+//
+//        String password = passwordEncoder().encode("1111");
+//
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(password)
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails sys = User.builder()
+//                .username("manager")
+//                .password(password)
+//                .roles("MANAGER" , "USER")
+//                .build();
+//
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(password)
+//                .roles("ADMIN" , "USER" , "MANAGER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, sys, admin);
+//    }
+
+
     @Bean
-    public UserDetailsManager users() {
-
-        String password = passwordEncoder().encode("1111");
-
-        UserDetails user = User.builder()
-                .username("user")
-                .password(password)
-                .roles("USER")
-                .build();
-
-        UserDetails sys = User.builder()
-                .username("manager")
-                .password(password)
-                .roles("MANAGER" , "USER")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(password)
-                .roles("ADMIN" , "USER" , "MANAGER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, sys, admin);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
+        return authConfiguration.getAuthenticationManager();
     }
 
     @Bean
