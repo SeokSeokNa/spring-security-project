@@ -1,11 +1,13 @@
 package io.security.corespringsecurity.security.configs;
 
+import io.security.corespringsecurity.security.common.FormAuthenticationDetailsSource;
 import io.security.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -29,8 +31,9 @@ import java.security.cert.Extension;
 @EnableWebSecurity
 @Slf4j
 @RequiredArgsConstructor
-public class SecurityConfig  {
+public class SecurityConfig {
 
+    private final FormAuthenticationDetailsSource authenticationDetailsSource;
 
 //    @Bean
 //    public UserDetailsManager users() {
@@ -60,6 +63,7 @@ public class SecurityConfig  {
 
 
     @Bean
+
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
         return authConfiguration.getAuthenticationManager();
     }
@@ -79,7 +83,7 @@ public class SecurityConfig  {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .antMatchers("/" , "/users").permitAll()
+                .antMatchers("/", "/users").permitAll()
                 .antMatchers("/mypage").hasRole("USER")
                 .antMatchers("/messages").hasRole("MANAGER")
                 .antMatchers("/config").hasRole("ADMIN")
@@ -89,6 +93,7 @@ public class SecurityConfig  {
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .loginProcessingUrl("/login_proc")
+                .authenticationDetailsSource(authenticationDetailsSource)
                 .permitAll()
                 .and().build();
     }
@@ -102,6 +107,6 @@ public class SecurityConfig  {
      */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
