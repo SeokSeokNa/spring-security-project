@@ -1,6 +1,7 @@
 package io.security.corespringsecurity.security.configs;
 
 import io.security.corespringsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.corespringsecurity.security.provider.CustomAuthenticationProvider;
@@ -38,6 +39,7 @@ public class SecurityConfig {
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 //    @Bean
 //    public UserDetailsManager users() {
@@ -101,6 +103,9 @@ public class SecurityConfig {
                 .permitAll()
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(customAuthenticationFailureHandler)
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(customAccessDeniedHandler)
                 .and().build();
     }
 
