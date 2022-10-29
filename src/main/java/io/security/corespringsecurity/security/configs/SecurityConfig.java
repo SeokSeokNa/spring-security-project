@@ -86,6 +86,10 @@ public class SecurityConfig  {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/")
+                .loginProcessingUrl("/login_proc")
+                .permitAll()
                 .and().build();
     }
 
