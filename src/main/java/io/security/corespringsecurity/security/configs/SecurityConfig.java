@@ -1,6 +1,7 @@
 package io.security.corespringsecurity.security.configs;
 
 import io.security.corespringsecurity.security.common.FormAuthenticationDetailsSource;
+import io.security.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.corespringsecurity.security.provider.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import java.security.cert.Extension;
 public class SecurityConfig {
 
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
 //    @Bean
 //    public UserDetailsManager users() {
@@ -95,6 +97,7 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login_proc")
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .permitAll()
+                .successHandler(customAuthenticationSuccessHandler)
                 .and().build();
     }
 
