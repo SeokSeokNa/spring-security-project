@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -36,6 +37,7 @@ import java.security.cert.Extension;
 @EnableWebSecurity
 @Slf4j
 @RequiredArgsConstructor
+@Order(0)
 public class SecurityConfig {
 
     private final FormAuthenticationDetailsSource authenticationDetailsSource;
@@ -108,8 +110,6 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .addFilterBefore(ajaxLoginProcessingFilter(http.getSharedObject(AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class) //ajax 필터를 등록
-                .csrf().disable()
                 .build();
     }
 
@@ -126,11 +126,4 @@ public class SecurityConfig {
     }
 
 
-
-    @Bean
-    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
-        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-        ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManager);
-        return ajaxLoginProcessingFilter;
-    }
 }
