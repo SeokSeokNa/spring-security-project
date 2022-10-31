@@ -26,20 +26,20 @@ public class AjaxSecurityConfig {
         return new AjaxAuthenticationProvider();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        ProviderManager authenticationManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
-//        authenticationManager.getProviders().add(ajaxAuthenticationProvider());
-//        return authenticationManager;
-//    }
+    @Bean
+    public AuthenticationManager ajaxAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        ProviderManager authenticationManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
+        authenticationManager.getProviders().add(ajaxAuthenticationProvider());
+        return authenticationManager;
+    }
 
 
     @Bean
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(ajaxAuthenticationProvider());
-        // Get AuthenticationManager
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+//        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        authenticationManagerBuilder.authenticationProvider(ajaxAuthenticationProvider());
+//        // Get AuthenticationManager
+//        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
 
 
@@ -48,17 +48,16 @@ public class AjaxSecurityConfig {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
-                .authenticationManager(authenticationManager)
-                .addFilterBefore(ajaxLoginProcessingFilter(authenticationManager) , UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(ajaxLoginProcessingFilter(http.getSharedObject(AuthenticationConfiguration.class)) , UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .build();
     }
 
 
     @Bean
-    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter(AuthenticationManager authenticationManager) throws Exception {
+    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-        ajaxLoginProcessingFilter.setAuthenticationManager(authenticationManager);
+        ajaxLoginProcessingFilter.setAuthenticationManager(ajaxAuthenticationManager(authenticationConfiguration));
         return ajaxLoginProcessingFilter;
     }
 
