@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 /*
     Ajax 요청에 대한 인증을 처리하는 Provider
  */
-@Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
@@ -27,7 +26,6 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     //검증
     @Override
-    @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         String username = authentication.getName();
@@ -41,12 +39,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("BadCredentialsException!");
         }
 
-        FormWebAuthenticationDetails details = (FormWebAuthenticationDetails) authentication.getDetails();
-        String secretKey = details.getSecretKey();
 
-        if (secretKey == null || !"secret".equals(secretKey)) {
-            throw new InsufficientAuthenticationException("InsufficientAuthenticationException!!");
-        }
 
         //최종 인증객체 생성성
         AjaxAuthenticationToken authenticationToken = new AjaxAuthenticationToken(accountContext.getAccount(), null, accountContext.getAuthorities());
