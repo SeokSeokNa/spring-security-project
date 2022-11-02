@@ -1,6 +1,8 @@
 package io.security.corespringsecurity.security.configs;
 
+import io.security.corespringsecurity.security.common.AjaxLoginAuthenticationEntryPoint;
 import io.security.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
+import io.security.corespringsecurity.security.handler.AjaxAccessDeniedHandler;
 import io.security.corespringsecurity.security.handler.AjaxAuthenticationFailureHandler;
 import io.security.corespringsecurity.security.handler.AjaxAuthenticationSuccessHandler;
 import io.security.corespringsecurity.security.provider.AjaxAuthenticationProvider;
@@ -12,7 +14,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -52,6 +56,16 @@ public class AjaxSecurityConfig {
     }
 
     @Bean
+    public AuthenticationEntryPoint ajaxLoginAuthenticationEntryPoint() {
+        return new AjaxLoginAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler ajaxAccessDeniedHandler() {
+        return new AjaxAccessDeniedHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
 //        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 //        authenticationManagerBuilder.authenticationProvider(ajaxAuthenticationProvider());
@@ -63,9 +77,14 @@ public class AjaxSecurityConfig {
         return http
                 .antMatcher("/api/**")
                 .authorizeRequests()
+                .antMatchers("/api/messages").hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(ajaxLoginProcessingFilter(http.getSharedObject(AuthenticationConfiguration.class)) , UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(ajaxLoginAuthenticationEntryPoint()) //인증예외 처리(인증하지 않은상태로 인증이 필요한 자원에 접근할 경우)
+                .accessDeniedHandler(ajaxAccessDeniedHandler()) //인가예외처리
+                .and()
                 .csrf().disable()
                 .build();
     }
