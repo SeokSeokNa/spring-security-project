@@ -72,7 +72,7 @@ public class AjaxSecurityConfig {
 //        // Get AuthenticationManager
 //        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
-
+        customConfigurerAjax(http);
 
         return http
                 .antMatcher("/api/**")
@@ -80,7 +80,7 @@ public class AjaxSecurityConfig {
                 .antMatchers("/api/messages").hasRole("MANAGER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(ajaxLoginProcessingFilter(http.getSharedObject(AuthenticationConfiguration.class)) , UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(ajaxLoginProcessingFilter(http.getSharedObject(AuthenticationConfiguration.class)) , UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(ajaxLoginAuthenticationEntryPoint()) //인증예외 처리(인증하지 않은상태로 인증이 필요한 자원에 접근할 경우)
                 .accessDeniedHandler(ajaxAccessDeniedHandler()) //인가예외처리
@@ -89,14 +89,23 @@ public class AjaxSecurityConfig {
                 .build();
     }
 
-
-    @Bean
-    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
-        ajaxLoginProcessingFilter.setAuthenticationManager(ajaxAuthenticationManager(authenticationConfiguration));
-        ajaxLoginProcessingFilter.setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler()); // successHandler 등록
-        ajaxLoginProcessingFilter.setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler()); // failureHandler 등록
-       return ajaxLoginProcessingFilter;
+    private void customConfigurerAjax(HttpSecurity http) throws Exception {
+        http
+                .apply(new AjaxLoginConfigurer<>())
+                .successHandlerAjax(ajaxAuthenticationSuccessHandler())
+                .failureHandlerAjax(ajaxAuthenticationFailureHandler())
+                .setAuthenticationManager(ajaxAuthenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
+                .loginProcessingUrl("/api/login");
     }
+
+
+//    @Bean
+//    public AjaxLoginProcessingFilter ajaxLoginProcessingFilter(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        AjaxLoginProcessingFilter ajaxLoginProcessingFilter = new AjaxLoginProcessingFilter();
+//        ajaxLoginProcessingFilter.setAuthenticationManager(ajaxAuthenticationManager(authenticationConfiguration));
+//        ajaxLoginProcessingFilter.setAuthenticationSuccessHandler(ajaxAuthenticationSuccessHandler()); // successHandler 등록
+//        ajaxLoginProcessingFilter.setAuthenticationFailureHandler(ajaxAuthenticationFailureHandler()); // failureHandler 등록
+//       return ajaxLoginProcessingFilter;
+//    }
 
 }
