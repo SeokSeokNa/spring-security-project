@@ -12,6 +12,11 @@
         var password = $("input[name='password']").val().trim();
         var data = {"username" : username, "password" : password};
 
+        /*
+            csfr 토큰관련
+             form 로그인시 thymeleaf에서 전송할때 자동으로 같이 csrf 토큰을 넣어 보내주지만 ajax 통신시
+             직접 설정하여 보내야한다.
+         */
         var csrfHeader = $('meta[name="_csrf_header"]').attr('content')
         var csrfToken = $('meta[name="_csrf"]').attr('content')
 
