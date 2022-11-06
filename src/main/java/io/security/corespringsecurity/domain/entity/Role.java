@@ -11,12 +11,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ROLE")
-@Data
-@ToString(exclude = {"accounts","resourcesSet"})
+@Getter
+@Setter
+@ToString(exclude = {"users","resourcesSet"})
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Builder
 public class Role implements Serializable {
 
     @Id
@@ -31,11 +32,12 @@ public class Role implements Serializable {
     private String roleDesc;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roleSet")
-    @OrderBy("orderNum desc")
-    private Set<io.security.corespringsecurity.domain.entity.Resources> resourcesSet = new LinkedHashSet<>();
+    @OrderBy("ordernum desc")
+    private Set<Resources> resourcesSet = new LinkedHashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles")
     private Set<Account> accounts = new HashSet<>();
 
 }
+
 

@@ -1,6 +1,7 @@
 package io.security.corespringsecurity.security.service;
 
 import io.security.corespringsecurity.domain.entity.Account;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -10,6 +11,7 @@ import java.util.Collection;
     User 클래스는 UserDetails 인터페이스의 구현체이다!!
     스프링 시큐리티의 인증객체는 UserDetails 타입이기때문에 구현체인 User를 상속받아 커스텀 하여 사용한다.
  */
+@Data
 public class AccountContext extends User {
 
 

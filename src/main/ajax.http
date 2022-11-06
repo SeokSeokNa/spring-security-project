@@ -22,6 +22,18 @@ X-Requested-With: XMLHttpRequest
 
 ###
 
+### Manager 계정 로그인
+POST http://localhost:8080/api/login
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "username": "admin",
+  "password": "pass"
+}
+
+###
+
 ### 자원접근 테스트
 GET http://localhost:8080/api/messages
 Content-Type: application/json

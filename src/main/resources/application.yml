@@ -3,16 +3,16 @@ spring:
     url: jdbc:postgresql://localhost:5432/springboot
     username: postgres
     password: pass
-  sql:
-    init:
-      data-locations:
-        - classpath:data.sql
-      username: postgres
-      password: pass
-      mode: always
+#  sql:
+#    init:
+#      data-locations:
+#        - classpath:data.sql
+#      username: postgres
+#      password: pass
+#      mode: always
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
@@ -21,7 +21,7 @@ spring:
         jdbc:
           lob:
             non-contextual-creation: true
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
 
   thymeleaf:
     cache: false

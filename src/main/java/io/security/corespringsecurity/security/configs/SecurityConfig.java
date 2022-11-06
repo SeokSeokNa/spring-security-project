@@ -46,6 +46,8 @@ public class SecurityConfig {
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    private String[] permitAllResources = {"/", "/login", "/user/login/**"};
+
 //    @Bean
 //    public UserDetailsManager users() {
 //
@@ -95,13 +97,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeRequests()
-                .antMatchers("/", "/users", "/login/**").permitAll()
-                .antMatchers("/mypage").hasRole("USER")
-                .antMatchers("/messages").hasRole("MANAGER")
-                .antMatchers("/config").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
+                .authorizeRequests().and()
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
@@ -114,6 +110,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
+                .csrf().disable()
                 .build();
     }
 

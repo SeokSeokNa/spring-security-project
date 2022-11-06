@@ -10,6 +10,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.transaction.Transactional;
+
 /*
     Ajax 요청에 대한 인증을 처리하는 Provider
  */
@@ -22,6 +24,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
     //검증
     @Override
+    @Transactional
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         String username = authentication.getName();
@@ -32,7 +35,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
         //비밀번호 암호화값 비교
         if (!passwordEncoder.matches(password, accountContext.getAccount().getPassword())) {
-            throw new BadCredentialsException("BadCredentialsException!");
+            throw new BadCredentialsException("Invalid password");
         }
 
 

@@ -2,6 +2,8 @@ package io.security.corespringsecurity.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class AccountDto {
 
@@ -10,5 +12,5 @@ public class AccountDto {
     private String password;
     private String email;
     private String age;
-    private String role;
+    private List<String> roles;
 }

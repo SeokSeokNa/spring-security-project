@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>-->
+<!--<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
 <head th:replace="layout/header::userHead"></head>
 <script>
@@ -17,8 +17,8 @@
              form 로그인시 thymeleaf에서 전송할때 자동으로 같이 csrf 토큰을 넣어 보내주지만 ajax 통신시
              직접 설정하여 보내야한다.
          */
-        var csrfHeader = $('meta[name="_csrf_header"]').attr('content')
-        var csrfToken = $('meta[name="_csrf"]').attr('content')
+        // var csrfHeader = $('meta[name="_csrf_header"]').attr('content')
+        // var csrfToken = $('meta[name="_csrf"]').attr('content')
 
         $.ajax({
             type: "post",
@@ -60,8 +60,8 @@
                 <div class="form-group">
                     <input type="password" class="form-control" name="password" placeholder="비밀번호" required="required">
                 </div>
-                <button type="button" onclick="formLogin()" id="formbtn" class="btn btn-lg btn-primary btn-block">로그인</button>
-                <!--<button type="submit" class="btn btn-lg btn-primary btn-block">로그인</button>-->
+                <!--                <button type="button" onclick="formLogin()" id="formbtn" class="btn btn-lg btn-primary btn-block">Ajax 로그인</button>-->
+                <button type="submit" class="btn btn-lg btn-primary btn-block">로그인</button>
             </form>
         </div>
     </div>

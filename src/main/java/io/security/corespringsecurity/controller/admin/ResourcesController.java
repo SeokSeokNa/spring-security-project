@@ -25,7 +25,7 @@ public class ResourcesController {
     @GetMapping(value="/admin/resources")
     public String getResources(Model model) throws Exception {
 
-        List<Resources> resources = resourcesService.selectResources();
+        List<Resources> resources = resourcesService.getResources();
         model.addAttribute("resources", resources);
 
         return "admin/resource/list";
@@ -49,7 +49,7 @@ public class ResourcesController {
 
         List<Role> roleList = roleService.getRoles();
         model.addAttribute("roleList", roleList);
-        Resources resources = resourcesService.selectResources(Long.valueOf(id));
+        Resources resources = resourcesService.getResources(Long.valueOf(id));
         model.addAttribute("resources", resources);
 
         return "admin/resource/detail";
