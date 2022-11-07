@@ -97,7 +97,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeRequests().and()
+
+                .authorizeRequests()
+                /*
+                    .antMatchers("/mypage").hasRole("MANAGER")
+                     - 인가관련 처리는 Map 객체로 관리하며 key는 path주소 value는 Role 로(List타입으로 -> 권한정보가 여러개일수 있으니) 관리된다.
+                     - ExpressionBasedFilterInvocationSecurityMetadataSource의 부모 클래스인 DefaultFilterInvocationSecurityMetadataSource 를 디버깅 해보면
+                       resultMap 이라는 필드명을 가진 Map 객체안에 관리되는걸 볼 수 있다.
+                     - DefaultFilterInvocationSecurityMetadataSource 클래스안에 "getAttributes" 메소드를 통해 권한 정보를 추출한다.
+
+                 */
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
