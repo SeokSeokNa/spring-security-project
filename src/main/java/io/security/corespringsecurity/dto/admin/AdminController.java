@@ -1,4 +1,4 @@
-package io.security.corespringsecurity.controller.admin;
+package io.security.corespringsecurity.dto.admin;
 
 
 import org.springframework.stereotype.Controller;
@@ -11,5 +11,6 @@ public class AdminController {
     public String home() throws Exception {
         return "admin/home";
     }
+
 
 }

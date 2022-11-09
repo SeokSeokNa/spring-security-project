@@ -1,4 +1,4 @@
-package io.security.corespringsecurity.controller.admin;
+package io.security.corespringsecurity.dto.admin;
 
 import io.security.corespringsecurity.domain.entity.Role;
 import io.security.corespringsecurity.dto.RoleDto;

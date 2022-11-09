@@ -11,10 +11,15 @@ import java.util.*;
 /*
     인가처리를 위해 권한정보를 추출하기 위한 "FilterInvocationSecurityMetadataSource" 를 직접 구현해보기 !
      - FilterInvocationSecurityMetadataSource는 Map 객체에 담긴 권한정보를 추출하여 AccessDecisionManager 에게 전달하여 인가처리를 처리하도록 한다.
+     - FilterInvocationSecurityMetadataSource는 를 구현하게 되면 Security설정 클래스에 인가 정책은 더 이상 동작하지 않는다.
  */
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap = new LinkedHashMap<>();
+
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+        requestMap = resourcesMap; //DB로 부터 권한정보를 가져와 Map을 만든 UrlResourcesMapFactoryBean 클래스로 부터 Map 객체를 전달받는다.
+    }
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {

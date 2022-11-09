@@ -55,13 +55,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     private void setupSecurityResources() {
         Set<Role> roles = new HashSet<>();
+        Set<Role> userRoles = new HashSet<>();
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
-        roles.add(adminRole);
-        createResourceIfNotFound("/admin/**", "", roles, "url");
-//        createResourceIfNotFound("execution(public * io.security.corespringsecurity.aopsecurity.*Service.pointcut*(..))", "", roles, "pointcut");
-        createUserIfNotFound("admin", "admin@admin.com", "pass", roles);
         Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저권한");
         Role userRole = createRoleIfNotFound("ROLE_USER", "사용자권한");
+
+        roles.add(adminRole);
+        userRoles.add(userRole);
+        createResourceIfNotFound("/admin/**", "", roles, "url");
+        createResourceIfNotFound("/mypage", "", roles, "url");
+        createResourceIfNotFound("/messages", "", roles, "url");
+        createResourceIfNotFound("/config", "", roles, "url");
+//        createResourceIfNotFound("execution(public * io.security.corespringsecurity.aopsecurity.*Service.pointcut*(..))", "", roles, "pointcut");
+        createUserIfNotFound("admin", "admin@admin.com", "pass", roles);
+        createUserIfNotFound("user", "user@admin.com", "pass", userRoles);
+
         createRoleHierarchyIfNotFound(managerRole, adminRole);
         createRoleHierarchyIfNotFound(userRole, managerRole);
     }

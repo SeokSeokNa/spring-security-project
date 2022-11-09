@@ -37,12 +37,12 @@ public class AjaxSecurityConfig {
         AuthenticationManager Bean 객체 생성 메소드명을 다르게 해줘야 각 설정클래스에 독립적으로 적용된다.
         (AjaxLoginProcessingFilter가 필요로 하는 AuthenticationManager로 AjaxAuthenticationProvider 가 등록되지 않는 문제가 있었음)
     */
-    @Bean
-    public AuthenticationManager ajaxAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        ProviderManager authenticationManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
-        authenticationManager.getProviders().add(ajaxAuthenticationProvider());
-        return authenticationManager;
-    }
+//    @Bean
+//    public AuthenticationManager ajaxAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        ProviderManager authenticationManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
+//        authenticationManager.getProviders().add(ajaxAuthenticationProvider());
+//        return authenticationManager;
+//    }
 
 
     @Bean
@@ -94,7 +94,7 @@ public class AjaxSecurityConfig {
                 .apply(new AjaxLoginConfigurer<>())
                 .successHandlerAjax(ajaxAuthenticationSuccessHandler())
                 .failureHandlerAjax(ajaxAuthenticationFailureHandler())
-                .setAuthenticationManager(ajaxAuthenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
+//                .setAuthenticationManager(ajaxAuthenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
                 .loginProcessingUrl("/api/login");
     }
 
