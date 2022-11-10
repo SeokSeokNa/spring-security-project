@@ -1,5 +1,6 @@
 package io.security.corespringsecurity.security.metadatasource;
 
+import io.security.corespringsecurity.service.SecurityResourceService;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -17,8 +18,11 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 
     private LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap = new LinkedHashMap<>();
 
-    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap) {
+    private SecurityResourceService securityResourceService;
+
+    public UrlFilterInvocationSecurityMetadataSource(LinkedHashMap<RequestMatcher, List<ConfigAttribute>> resourcesMap , SecurityResourceService securityResourceService) {
         requestMap = resourcesMap; //DB로 부터 권한정보를 가져와 Map을 만든 UrlResourcesMapFactoryBean 클래스로 부터 Map 객체를 전달받는다.
+        this.securityResourceService = securityResourceService;
     }
 
     @Override
@@ -52,5 +56,21 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
     public boolean supports(Class<?> clazz) {
         //메소드 방식이 아닌 URL 방식일경우 FilterInvocation 객체를 생성해서 넘어오기에 URL 방식인지 판단할 수 있다.
         return FilterInvocation.class.isAssignableFrom(clazz);
+    }
+
+
+    /*
+        DB에 있는 권한정보가 변경이나 추가가 일어났는때 어플리케이션을 재시작하지 않고 실시간적으로 반영시키기 위한 메소드드
+    */
+    public void reload() {
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
+        Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
+
+        requestMap.clear();
+
+        while (iterator.hasNext()) {
+            Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
+            requestMap.put(entry.getKey(), entry.getValue());
+        }
     }
 }

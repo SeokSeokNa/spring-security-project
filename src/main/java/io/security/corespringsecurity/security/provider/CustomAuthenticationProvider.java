@@ -31,7 +31,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(username);
 
         //비밀번호 암호화값 비교
-        if (!passwordEncoder.matches(password, accountContext.getAccount().getPassword())) {
+        if (!passwordEncoder.matches(password, accountContext.getPassword())) {
             throw new BadCredentialsException("BadCredentialsException!");
         }
 

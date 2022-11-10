@@ -55,23 +55,28 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     private void setupSecurityResources() {
         Set<Role> roles = new HashSet<>();
-        Set<Role> userRoles = new HashSet<>();
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
-        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저권한");
-        Role userRole = createRoleIfNotFound("ROLE_USER", "사용자권한");
-
         roles.add(adminRole);
-        userRoles.add(userRole);
-        createResourceIfNotFound("/admin/**", "", roles, "url");
-        createResourceIfNotFound("/mypage", "", roles, "url");
-        createResourceIfNotFound("/messages", "", roles, "url");
-        createResourceIfNotFound("/config", "", roles, "url");
-//        createResourceIfNotFound("execution(public * io.security.corespringsecurity.aopsecurity.*Service.pointcut*(..))", "", roles, "pointcut");
-        createUserIfNotFound("admin", "admin@admin.com", "pass", roles);
-        createUserIfNotFound("user", "user@admin.com", "pass", userRoles);
 
+        createResourceIfNotFound("/admin/**", "", roles, "url");
+        createUserIfNotFound("admin", "admin@gmail.com", "pass", roles);
+
+        Set<Role> roles1 = new HashSet<>();
+        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
+        roles1.add(managerRole);
+
+        createResourceIfNotFound("/mypage", "", roles1, "url");
+        createResourceIfNotFound("/messages", "", roles1, "url");
+        createUserIfNotFound("manager", "manager@gmail.com", "pass",  roles1);
         createRoleHierarchyIfNotFound(managerRole, adminRole);
-        createRoleHierarchyIfNotFound(userRole, managerRole);
+
+        Set<Role> roles3 = new HashSet<>();
+        Role childRole1 = createRoleIfNotFound("ROLE_USER", "회원");
+        roles3.add(childRole1);
+
+        createResourceIfNotFound("/users/**", "", roles3, "url");
+        createUserIfNotFound("user", "user@gmail.com", "pass", roles3);
+        createRoleHierarchyIfNotFound(childRole1, managerRole);
     }
 
     @Transactional
