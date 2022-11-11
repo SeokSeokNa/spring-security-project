@@ -4,6 +4,7 @@ import ch.qos.logback.core.Context;
 import io.security.corespringsecurity.security.common.FormAuthenticationDetailsSource;
 import io.security.corespringsecurity.security.factory.UrlResourcesMapFactoryBean;
 import io.security.corespringsecurity.security.filter.AjaxLoginProcessingFilter;
+import io.security.corespringsecurity.security.filter.PermitAllFilter;
 import io.security.corespringsecurity.security.handler.CustomAccessDeniedHandler;
 import io.security.corespringsecurity.security.handler.CustomAuthenticationFailureHandler;
 import io.security.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
@@ -142,7 +143,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
                 .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
-//                .addFilterBefore(customFilterSecurityInterceptor(http.getSharedObject(AuthenticationConfiguration.class)), FilterSecurityInterceptor.class)
+                .addFilterBefore(customFilterSecurityInterceptor(http.getSharedObject(AuthenticationConfiguration.class)), FilterSecurityInterceptor.class)
                 .csrf().disable()
                 .build();
     }
@@ -160,12 +161,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FilterSecurityInterceptor customFilterSecurityInterceptor(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
-        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
-        filterSecurityInterceptor.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filterSecurityInterceptor;
+    public PermitAllFilter customFilterSecurityInterceptor(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource());
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+        return permitAllFilter;
     }
 
 
