@@ -8,6 +8,7 @@ import io.security.corespringsecurity.security.handler.CustomAuthenticationFailu
 import io.security.corespringsecurity.security.handler.CustomAuthenticationSuccessHandler;
 import io.security.corespringsecurity.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import io.security.corespringsecurity.security.provider.CustomAuthenticationProvider;
+import io.security.corespringsecurity.security.voter.IpAddressVoter;
 import io.security.corespringsecurity.service.SecurityResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -168,7 +169,15 @@ public class SecurityConfig {
     private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
 
         List<AccessDecisionVoter<? extends Object>> accessDecisionVoters = new ArrayList<>();
-        accessDecisionVoters.add(new RoleVoter());
+
+        /*
+            voter 설정중 "IpAddressVoter" 가 먼저 accessDecisionVoters에 추가한 이유는
+            가장 먼저 심사를 하기 위해서이다 , 만약 허용되지 않은 아이피 일 경우 다음심사가 필요없기 때문
+            만약에 IpAddressVoter가 맨처음에 설정되지 않는다면 다른 voter에서 ACCESS_GRANTED를 만나는 순간 바로 허용이 되버리기 때문에 조심해야한다.
+         */
+
+        accessDecisionVoters.add(new IpAddressVoter(securityResourceService));
+        accessDecisionVoters.add(roleVoter());
 
         return accessDecisionVoters;
     }
@@ -179,6 +188,8 @@ public class SecurityConfig {
         RoleHierarchyVoter roleHierarchyVoter = new RoleHierarchyVoter(roleHierarchy());
         return roleHierarchyVoter;
     }
+
+
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {

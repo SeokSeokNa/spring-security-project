@@ -20,7 +20,7 @@ public class SecurityResourceService {
 
 
     private ResourcesRepository resourcesRepository;
-//    private AccessIpRepository accessIpRepository;
+    private AccessIpRepository accessIpRepository;
 
     public SecurityResourceService(ResourcesRepository resourcesRepository) {
         this.resourcesRepository = resourcesRepository;
@@ -75,8 +75,8 @@ public class SecurityResourceService {
         return result;
     }
 
-//    public List<String> getAccessIpList() {
-//        List<String> accessIpList = accessIpRepository.findAll().stream().map(accessIp -> accessIp.getIpAddress()).collect(Collectors.toList());
-//        return accessIpList;
-//    }
+    public List<String> getAccessIpList() {
+        List<String> accessIpList = accessIpRepository.findAll().stream().map(accessIp -> accessIp.getIpAddress()).collect(Collectors.toList());
+        return accessIpList;
+    }
 }
