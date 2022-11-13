@@ -87,7 +87,7 @@ public class SecurityConfig {
         ProviderManager authenticationManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
         authenticationManager.getProviders().add(customAuthenticationProvider());
         return authenticationManager;
-//        return authConfiguration.getAuthenticationManager();
+//        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -127,14 +127,13 @@ public class SecurityConfig {
                 .authenticationDetailsSource(formAuthenticationDetailsSource)
                 .successHandler(customAuthenticationSuccessHandler)
                 .failureHandler(customAuthenticationFailureHandler)
-                .permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
-                .addFilterBefore(customFilterSecurityInterceptor(http.getSharedObject(AuthenticationConfiguration.class)), FilterSecurityInterceptor.class)
+//                .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
+                .addFilterAt(customFilterSecurityInterceptor(http.getSharedObject(AuthenticationConfiguration.class)), FilterSecurityInterceptor.class)
                 .csrf().disable()
                 .build();
     }
