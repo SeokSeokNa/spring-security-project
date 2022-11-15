@@ -43,7 +43,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Order(0)
-@EnableGlobalMethodSecurity(securedEnabled = true) //메소드 기반에 인가처리를 위해 필요한 어노테이션
+//@EnableGlobalMethodSecurity(securedEnabled = true , prePostEnabled = true) //메소드 기반에 인가처리를 위해 필요한 어노테이션
 public class SecurityConfig {
 
     private final FormAuthenticationDetailsSource formAuthenticationDetailsSource;
