@@ -42,10 +42,10 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/mypage")
-    public String myPage(@AuthenticationPrincipal Account account, Authentication authentication, Principal principal) {
-        return "user/mypage";
-    }
+//    @GetMapping("/mypage")
+//    public String myPage(@AuthenticationPrincipal Account account, Authentication authentication, Principal principal) {
+//        return "user/mypage";
+//    }
 
     @GetMapping("/order")
     public String order() {
