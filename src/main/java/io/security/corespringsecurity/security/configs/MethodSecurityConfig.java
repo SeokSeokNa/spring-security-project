@@ -5,12 +5,18 @@ import io.security.corespringsecurity.service.SecurityResourceService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.method.MapBasedMethodSecurityMetadataSource;
 import org.springframework.security.access.method.MethodSecurityMetadataSource;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 
 @Configuration
@@ -57,6 +63,30 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
         MethodResoucesFactoryBean methodResoucesFactoryBean = new MethodResoucesFactoryBean();
         methodResoucesFactoryBean.setSecurityResourceService(securityResourceService);
+        methodResoucesFactoryBean.setResourceType("method");
         return methodResoucesFactoryBean;
+    }
+
+    @Bean
+    public MethodResoucesFactoryBean pointcutResourcesMapFactoryBean() {
+
+        MethodResoucesFactoryBean methodResoucesFactoryBean = new MethodResoucesFactoryBean();
+        methodResoucesFactoryBean.setSecurityResourceService(securityResourceService);
+        methodResoucesFactoryBean.setResourceType("pointcut");
+        return methodResoucesFactoryBean;
+    }
+
+    @Bean
+    BeanPostProcessor protectPointcutPostProcessor() throws Exception {
+
+        Class<?> clazz = Class.forName("org.springframework.security.config.method.ProtectPointcutPostProcessor");
+        Constructor<?> declaredConstructor = clazz.getDeclaredConstructor(MapBasedMethodSecurityMetadataSource.class);
+        declaredConstructor.setAccessible(true);
+        Object instance = declaredConstructor.newInstance(mapBasedMethodSecurityMetadataSource());
+        Method setPointcutMap = instance.getClass().getMethod("setPointcutMap", Map.class);
+        setPointcutMap.setAccessible(true);
+        setPointcutMap.invoke(instance, pointcutResourcesMapFactoryBean().getObject()); //db로 부터 가지고온 resourceMap 데이터가 전달됨
+
+        return (BeanPostProcessor)instance;
     }
 }

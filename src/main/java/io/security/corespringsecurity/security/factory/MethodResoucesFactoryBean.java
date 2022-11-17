@@ -12,12 +12,16 @@ public class MethodResoucesFactoryBean implements FactoryBean<LinkedHashMap<Stri
 
     private SecurityResourceService securityResourceService;
     private LinkedHashMap<String , List<ConfigAttribute>> resourceMap;
+    private String resourceType;
 
 
     public void setSecurityResourceService(SecurityResourceService securityResourceService) {
         this.securityResourceService = securityResourceService;
     }
 
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
+    }
 
     @Override
     public LinkedHashMap<String, List<ConfigAttribute>> getObject() {
@@ -31,7 +35,12 @@ public class MethodResoucesFactoryBean implements FactoryBean<LinkedHashMap<Stri
 
     //DB에서 인가처리를 위한 권한정보 가져오기 (path , authList)
     private void init() {
-        resourceMap =  securityResourceService.getMethodResourceList();
+        if ("method".equals(resourceType)) {
+            resourceMap =  securityResourceService.getMethodResourceList();
+        } else if("pointcut".equals(resourceType)) {
+            resourceMap =  securityResourceService.getPointcutResourceList();
+        }
+
     }
 
     @Override

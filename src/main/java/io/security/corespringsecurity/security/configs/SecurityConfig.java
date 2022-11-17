@@ -175,7 +175,7 @@ public class SecurityConfig {
             만약에 IpAddressVoter가 맨처음에 설정되지 않는다면 다른 voter에서 ACCESS_GRANTED를 만나는 순간 바로 허용이 되버리기 때문에 조심해야한다.
          */
 
-        accessDecisionVoters.add(new IpAddressVoter(securityResourceService));
+//        accessDecisionVoters.add(new IpAddressVoter(securityResourceService));
         accessDecisionVoters.add(roleVoter());
 
         return accessDecisionVoters;
