@@ -1,6 +1,7 @@
 package io.security.corespringsecurity.security.configs;
 
 import io.security.corespringsecurity.security.factory.MethodResoucesFactoryBean;
+import io.security.corespringsecurity.security.prcessor.ProtectPointcutPostProcessor;
 import io.security.corespringsecurity.service.SecurityResourceService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.FactoryBean;
@@ -76,17 +77,23 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
         return methodResoucesFactoryBean;
     }
 
-    @Bean
-    BeanPostProcessor protectPointcutPostProcessor() throws Exception {
-
-        Class<?> clazz = Class.forName("org.springframework.security.config.method.ProtectPointcutPostProcessor");
-        Constructor<?> declaredConstructor = clazz.getDeclaredConstructor(MapBasedMethodSecurityMetadataSource.class);
-        declaredConstructor.setAccessible(true);
-        Object instance = declaredConstructor.newInstance(mapBasedMethodSecurityMetadataSource());
-        Method setPointcutMap = instance.getClass().getMethod("setPointcutMap", Map.class);
-        setPointcutMap.setAccessible(true);
-        setPointcutMap.invoke(instance, pointcutResourcesMapFactoryBean().getObject()); //db로 부터 가지고온 resourceMap 데이터가 전달됨
-
-        return (BeanPostProcessor)instance;
+//    @Bean
+//    BeanPostProcessor protectPointcutPostProcessor() throws Exception {
+//
+//        Class<?> clazz = Class.forName("org.springframework.security.config.method.ProtectPointcutPostProcessor");
+//        Constructor<?> declaredConstructor = clazz.getDeclaredConstructor(MapBasedMethodSecurityMetadataSource.class);
+//        declaredConstructor.setAccessible(true);
+//        Object instance = declaredConstructor.newInstance(mapBasedMethodSecurityMetadataSource());
+//        Method setPointcutMap = instance.getClass().getMethod("setPointcutMap", Map.class);
+//        setPointcutMap.setAccessible(true);
+//        setPointcutMap.invoke(instance, pointcutResourcesMapFactoryBean().getObject()); //db로 부터 가지고온 resourceMap 데이터가 전달됨
+//
+//        return (BeanPostProcessor)instance;
+//    }
+//
+    public ProtectPointcutPostProcessor protectPointcutPostProcessor() {
+        ProtectPointcutPostProcessor protectPointcutPostProcessor = new ProtectPointcutPostProcessor(mapBasedMethodSecurityMetadataSource());
+        protectPointcutPostProcessor.setPointcutMap(pointcutResourcesMapFactoryBean().getObject());
+        return protectPointcutPostProcessor;
     }
 }
