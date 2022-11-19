@@ -14,6 +14,13 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/*
+포인트컷 인가처리 방식 초기화
+    DB에 표현식 과 권한정보를 넣어두고 실행시 가져온다.
+    여기서 표현식은 인가처리가 필요한 클래스의 범위를 나타낸다.
+    DB로 부터 가져온 정보를 가지고 "ProtectPointcutPostProcessor" 클래스 내부에 PointcutMap에 저장한후 인가처리가 필요한 클래스정보와 인가처리가 필요한 메소드와 권한정보를 "MapBaseMethodSecurityMetadataSource" 클래스에게 전달한다.
+    이후 처리는 method 방식과 동일하다.
+ */
 @Slf4j
 public class ProtectPointcutPostProcessor implements BeanPostProcessor {
 
