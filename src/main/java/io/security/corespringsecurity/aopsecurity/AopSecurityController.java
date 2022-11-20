@@ -21,6 +21,8 @@ public class AopSecurityController {
     private final AopMethodService aopMethodService;
     private final AopPointcutService aopPointcutService;
 
+    private final AopLiveMethodService aopLiveMethodService;
+
 
     @GetMapping("/preAuthorize")
     @PreAuthorize("hasRole('ROLE_USER') and #account.username == principal.username") //#account 하면 account 객체를 참조할수 있게 해준다 , principal에는 로그인한 인증 정보가 들어있음
@@ -44,6 +46,16 @@ public class AopSecurityController {
         aopPointcutService.notSecured();
         aopPointcutService.pointcutSecured();
         model.addAttribute("method", "Success MethodSecured");
+
+        return "aop/method";
+    }
+
+
+    @GetMapping("/liveMethodSecured")
+    public String liveMethodSecured(Model model){
+
+        aopLiveMethodService.liveMethodSecured();
+        model.addAttribute("method", "Success LiveMethodSecured");
 
         return "aop/method";
     }
